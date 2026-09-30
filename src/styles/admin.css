@@ -1,0 +1,490 @@
+/* ==========================================================================
+   HABIBA YASSER VISUAL CMS & DASHBOARD STYLES (Retro-Digital System)
+   ========================================================================== */
+
+/* 1. Admin Top Floating Toolbar */
+.admin-toolbar-root {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2.5px solid var(--plum);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(46, 26, 58, 0.15), 4px 4px 0 var(--plum);
+  font-family: var(--sans);
+  direction: ltr;
+  max-width: calc(100vw - 24px);
+  flex-wrap: wrap;
+  justify-content: center;
+  transition: all 0.35s var(--spring);
+}
+
+[dir="rtl"] .admin-toolbar-root {
+  direction: rtl;
+}
+
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--candy);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.admin-badge i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FFE066;
+  animation: pulse-dot 1.8s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.admin-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1.5px solid var(--plum);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--plum);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s var(--spring);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.admin-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 2px 3px 0 var(--plum);
+  background: var(--paper);
+}
+
+.admin-btn.primary {
+  background: var(--primary-blue);
+  color: #fff;
+  border-color: var(--primary-blue);
+}
+
+.admin-btn.primary:hover {
+  background: #1e40af;
+  box-shadow: 2px 3px 0 var(--plum);
+}
+
+.admin-btn.export {
+  background: #10B981;
+  color: #fff;
+  border-color: #059669;
+}
+
+.admin-btn.export:hover {
+  background: #059669;
+}
+
+.admin-btn.danger {
+  color: #DC2626;
+  border-color: #FECACA;
+}
+
+.admin-btn.danger:hover {
+  background: #FEE2E2;
+}
+
+/* 2. Visual In-Context Editable Element Pin & Outline */
+.editable-container {
+  position: relative;
+  transition: outline 0.2s, outline-offset 0.2s;
+  display: inline-block;
+  width: inherit;
+}
+
+.editable-container.block {
+  display: block;
+}
+
+.editable-container.cms-active:hover {
+  outline: 2px dashed var(--primary-blue);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+/* Ensure any element inside EditableElement is never hidden by data-r */
+.editable-container [data-r],
+.editable-container[data-r] {
+  opacity: 1 !important;
+  translate: 0 0 !important;
+}
+
+.edit-pin-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #fff;
+  border: 2px solid var(--plum);
+  border-radius: 50%;
+  color: var(--primary-blue);
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 2px 3px 0 var(--plum);
+  transition: all 0.25s var(--spring);
+  opacity: 0.85;
+}
+
+[dir="rtl"] .edit-pin-btn {
+  right: auto;
+  left: -8px;
+}
+
+.editable-container:hover .edit-pin-btn {
+  opacity: 1;
+  transform: scale(1.15) rotate(-10deg);
+  background: #FFE066;
+  color: var(--plum);
+}
+
+/* 3. Comprehensive Tooltip explaining what can be edited */
+.edit-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: var(--plum);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(46, 26, 58, 0.25), 2px 3px 0 var(--candy);
+  z-index: 50;
+  transition: opacity 0.2s, transform 0.25s var(--spring);
+}
+
+.edit-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--plum) transparent transparent transparent;
+}
+
+.edit-pin-btn:hover .edit-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.edit-tooltip b {
+  display: block;
+  font-weight: 700;
+  color: #FFE066;
+  margin-bottom: 2px;
+}
+
+/* 4. Retro Modal Overlay & Window */
+.retro-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(46, 26, 58, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+  animation: fadeInModal 0.25s ease-out;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.retro-modal-window {
+  position: relative;
+  width: min(620px, 100%);
+  background: var(--paper);
+  border: 3px solid var(--plum);
+  border-radius: 20px;
+  box-shadow: 8px 12px 0 var(--candy), 0 20px 40px rgba(0, 0, 0, 0.2);
+  color: var(--plum);
+  font-family: var(--sans);
+  overflow: hidden;
+  animation: scaleUpModal 0.35s var(--spring);
+}
+
+@keyframes scaleUpModal {
+  from { opacity: 0; transform: scale(0.92) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.retro-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: var(--candy);
+  color: #fff;
+  border-bottom: 2.5px solid var(--plum);
+}
+
+.retro-modal-header .win-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.retro-modal-header .win-dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1.5px solid var(--plum);
+}
+
+.retro-modal-header .win-dots i:nth-child(1) { background: #FF5F56; }
+.retro-modal-header .win-dots i:nth-child(2) { background: #FFBD2E; }
+.retro-modal-header .win-dots i:nth-child(3) { background: #27C93F; }
+
+.retro-modal-header b {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.retro-modal-close {
+  background: #fff;
+  border: 1.5px solid var(--plum);
+  border-radius: 999px;
+  color: var(--plum);
+  font-size: 13px;
+  font-weight: 700;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: all 0.2s var(--spring);
+}
+
+.retro-modal-close:hover {
+  background: #FF5F56;
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.retro-modal-body {
+  padding: 24px 22px;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.modal-field-group {
+  margin-bottom: 18px;
+}
+
+.modal-field-group label {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: var(--plum);
+}
+
+.modal-field-group .field-hint {
+  font-size: 12px;
+  opacity: 0.75;
+  margin-bottom: 8px;
+}
+
+.modal-input, .modal-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--plum);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--plum);
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modal-input:focus, .modal-textarea:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 3px 3px 0 var(--primary-blue);
+}
+
+.modal-textarea {
+  min-height: 110px;
+  resize: vertical;
+  background: repeating-linear-gradient(transparent 0 27px, #FFE2EE 27px 28px);
+  line-height: 28px;
+}
+
+/* Image Upload & Dropzone */
+.image-upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  border: 2.5px dashed var(--plum);
+  border-radius: 16px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: center;
+}
+
+.image-upload-zone:hover {
+  background: var(--blush);
+  border-color: var(--primary-blue);
+}
+
+.image-preview-box {
+  width: 120px;
+  height: 120px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid var(--plum);
+  box-shadow: 3px 3px 0 var(--candy);
+  margin-bottom: 8px;
+}
+
+.image-preview-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.retro-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 22px;
+  border-top: 2px dashed rgba(46, 26, 58, 0.2);
+  background: var(--paper);
+}
+
+.modal-btn {
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: 2px solid var(--plum);
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s var(--spring);
+}
+
+.modal-btn.save {
+  background: var(--candy);
+  color: #fff;
+  box-shadow: 3px 3px 0 var(--plum);
+}
+
+.modal-btn.save:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 5px 0 var(--plum);
+  background: #E8336F;
+}
+
+.modal-btn.cancel {
+  background: #fff;
+  color: var(--plum);
+}
+
+.modal-btn.cancel:hover {
+  background: var(--blush);
+}
+
+/* 7. Boarding Pass CMS Layout Safeguards */
+.pass-head .editable-container {
+  display: inline-flex;
+}
+
+.pass-head .edit-pin-btn {
+  top: -6px;
+  right: -6px;
+}
+
+[dir="rtl"] .pass-head .edit-pin-btn {
+  right: auto;
+  left: -6px;
+}
+
+.pass-fields .editable-container {
+  display: block;
+  width: 100%;
+}
+
+.pass-fields .edit-pin-btn {
+  top: -4px;
+  right: -4px;
+  width: 22px;
+  height: 22px;
+  font-size: 11px;
+}
+
+[dir="rtl"] .pass-fields .edit-pin-btn {
+  right: auto;
+  left: -4px;
+}
+
+.pass-stub .editable-container {
+  display: block;
+  width: 100%;
+}
+
+.pass-stub .edit-pin-btn {
+  top: -4px;
+  right: -4px;
+}
+
+[dir="rtl"] .pass-stub .edit-pin-btn {
+  right: auto;
+  left: -4px;
+}
+

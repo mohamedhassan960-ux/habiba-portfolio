@@ -1,29 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { CATEGORIES, SOCIAL_LINKS } from '../data/portfolioData';
 import { usePortfolioData } from '../context/PortfolioDataContext';
-import EditableElement from './admin/EditableElement';
 
 const TAPES = ['var(--butter)', 'var(--peri)', 'var(--mint)', '#ffffff', 'var(--blush)'];
 
 export default function SelectedWorks({ lang, content, onSelectWork }) {
   const isRTL = lang === 'ar';
   const { items = [], eyebrow, sectionTitle, sectionSubtitle, viewFull } = content || {};
-  const { isAdmin, previewMode, setProjectModal, setCategoryModal, moveProjectCategory, data } = usePortfolioData();
+  const { data } = usePortfolioData();
   const currentCategories = data?.categories && data.categories.length > 0 ? data.categories : CATEGORIES;
 
   // Build folder map from currentCategories
   const folderKeys = currentCategories.map((c) => c.slug);
   const [activeKey, setActiveKey] = useState('all');
-  const [draggingProjectId, setDraggingProjectId] = useState(null);
-  const [dragOverTab, setDragOverTab] = useState(null);
-  const [toastMsg, setToastMsg] = useState(null);
-
-  const showToast = (msg) => {
-    setToastMsg(msg);
-    setTimeout(() => {
-      setToastMsg((prev) => (prev === msg ? null : prev));
-    }, 3500);
-  };
 
   const cabinetRef = useRef(null);
   const folderRef = useRef(null);
@@ -124,15 +113,9 @@ export default function SelectedWorks({ lang, content, onSelectWork }) {
                 {eyebrow}
               </span>
             )}
-            <EditableElement
-              path="works.sectionTitle"
-              title="عنوان قسم الأعمال | Selected Works"
-              hint="تعديل العنوان الرئيسي لمعرض الأعمال"
-            >
-              <h2 className="h2" id="work-title">
-                {sectionTitle || (isRTL ? 'أعمال مختارة' : 'Selected work')}
-              </h2>
-            </EditableElement>
+            <h2 className="h2" id="work-title">
+              {sectionTitle || (isRTL ? 'أعمال مختارة' : 'Selected work')}
+            </h2>
           </div>
           {sectionSubtitle ? <p>{sectionSubtitle}</p> : null}
         </div>
@@ -156,13 +139,12 @@ export default function SelectedWorks({ lang, content, onSelectWork }) {
             {currentCategories.map((cat, idx) => {
               const isSelected = activeKey === cat.slug;
               const count = getFilteredItems(cat.slug).length;
-              const isOver = dragOverTab === cat.slug;
 
               return (
                 <button
                   key={cat.slug}
                   data-k={cat.slug}
-                  className={`tab cursor-pointer ${isSelected ? 'active' : ''} ${isOver ? 'drop-target' : ''}`}
+                  className={`tab cursor-pointer ${isSelected ? 'active' : ''}`}
                   role="tab"
                   id={`tab-${cat.slug}`}
                   aria-controls="folder"
@@ -170,69 +152,9 @@ export default function SelectedWorks({ lang, content, onSelectWork }) {
                   tabIndex={isSelected ? 0 : -1}
                   style={{ '--c': cat.color }}
                   onClick={() => stepFolder(idx > activeIndex ? 1 : -1, cat.slug)}
-                  onDragOver={(e) => {
-                    if (!isAdmin || previewMode) return;
-                    e.preventDefault();
-                    e.dataTransfer.dropEffect = 'move';
-                    if (dragOverTab !== cat.slug) setDragOverTab(cat.slug);
-                  }}
-                  onDragLeave={() => {
-                    if (dragOverTab === cat.slug) setDragOverTab(null);
-                  }}
-                  onDrop={(e) => {
-                    if (!isAdmin || previewMode) return;
-                    e.preventDefault();
-                    setDragOverTab(null);
-                    const pId = e.dataTransfer.getData('text/plain') || draggingProjectId;
-                    if (!pId) return;
-
-                    if (cat.slug === 'all') {
-                      showToast(
-                        isRTL
-                          ? 'تبويب "كل الأعمال" يشمل كافة المشاريع تلقائياً ✿'
-                          : 'The "All Works" folder includes all projects automatically ✿'
-                      );
-                      return;
-                    }
-
-                    const targetItem = items.find((it) => it.id === pId);
-                    if (!targetItem) return;
-
-                    if (targetItem.categorySlug === cat.slug) {
-                      showToast(
-                        isRTL
-                          ? `المشروع موجود بالفعل في تبويب "${cat.name[lang] || cat.name.ar}" ✿`
-                          : `Project is already in "${cat.name[lang] || cat.name.en}" ✿`
-                      );
-                      return;
-                    }
-
-                    moveProjectCategory(pId, cat.slug);
-                    setActiveKey(cat.slug);
-                    showToast(
-                      isRTL
-                        ? `تم نقل "${targetItem.title}" إلى تبويب "${cat.name[lang] || cat.name.ar}" بنجاح ✿`
-                        : `Moved "${targetItem.title}" to "${cat.name[lang] || cat.name.en}" successfully ✿`
-                    );
-                  }}
                 >
                   <span className="tab-label">{cat.name[lang] || cat.name.en}</span>
                   <sup>{count}</sup>
-                  {isAdmin && !previewMode && (
-                    <span
-                      className="tab-edit-pin"
-                      role="button"
-                      tabIndex={0}
-                      title={isRTL ? 'تعديل اسم التبويب بالعربية والإنجليزية ✿' : 'Edit tab name in Arabic & English ✿'}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        setCategoryModal({ isOpen: true, category: cat });
-                      }}
-                    >
-                      ✏️
-                    </span>
-                  )}
                 </button>
               );
             })}
@@ -296,52 +218,13 @@ export default function SelectedWorks({ lang, content, onSelectWork }) {
             <ul className="grid is-fav enter" id="grid">
               {filteredItems.map((item, index) => {
                 const tapeColor = TAPES[index % TAPES.length];
-                const isItemDragging = draggingProjectId === item.id;
 
                 return (
                   <li
                     key={item.id}
-                    className={`card fav relative ${isItemDragging ? 'is-dragging' : ''}`}
+                    className="card fav relative"
                     style={{ '--tape': tapeColor, '--k': index }}
-                    draggable={isAdmin && !previewMode}
-                    onDragStart={(e) => {
-                      if (!isAdmin || previewMode) return;
-                      e.dataTransfer.setData('text/plain', item.id);
-                      setDraggingProjectId(item.id);
-                    }}
-                    onDragEnd={() => {
-                      setDraggingProjectId(null);
-                      setDragOverTab(null);
-                    }}
                   >
-                    {isAdmin && !previewMode && (
-                      <div className="card-admin-pins">
-                        <button
-                          type="button"
-                          className="edit-pin-btn"
-                          title={isRTL ? "تعديل هذا المشروع | Edit Project" : "Edit Project"}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            setProjectModal({ isOpen: true, project: item, isNew: false });
-                          }}
-                        >
-                          <span aria-hidden="true">✏️</span>
-                          <div className="edit-tooltip">
-                            <b>تعديل هذا المشروع ✿</b>
-                            <span>انقر لتعديل العنوان، الغلاف، التصنيف، الوصف أو الرابط</span>
-                          </div>
-                        </button>
-
-                        <div
-                          className="card-drag-badge"
-                          title={isRTL ? "اسحب الكارت وأفلته على أي تبويب لنقله ⇄" : "Drag and drop onto any tab to move ⇄"}
-                        >
-                          <span aria-hidden="true">⇄</span>
-                        </div>
-                      </div>
-                    )}
-
                     <a
                       href="#view"
                       role="button"
@@ -400,25 +283,6 @@ export default function SelectedWorks({ lang, content, onSelectWork }) {
                   </li>
                 );
               })}
-
-              {/* Add New Project Card in Admin Mode */}
-              {isAdmin && !previewMode && (
-                <li
-                  className="card fav border-2 border-dashed border-[var(--primary-blue)] flex items-center justify-center p-8 bg-[var(--paper)] rounded-2xl cursor-pointer hover:bg-[var(--blush)] transition-all text-center"
-                  style={{ minHeight: '340px' }}
-                  onClick={() => setProjectModal({ isOpen: true, project: null, isNew: true })}
-                >
-                  <div className="flex flex-col items-center gap-3">
-                    <span className="text-4xl">➕</span>
-                    <b className="text-lg text-[var(--primary-blue)] font-bold">
-                      {isRTL ? 'إضافة مشروع جديد ✿' : 'Add New Project ✿'}
-                    </b>
-                    <span className="text-xs text-[var(--plum)] opacity-70">
-                      {isRTL ? 'انقر لرفع الغلاف وإضافة مشروع إلى المحفظة' : 'Click to add a project'}
-                    </span>
-                  </div>
-                </li>
-              )}
             </ul>
           </div>
         </div>
@@ -435,14 +299,6 @@ export default function SelectedWorks({ lang, content, onSelectWork }) {
           </a>
         </div>
       </div>
-
-      {/* Retro Toast Notification */}
-      {toastMsg && (
-        <div className="retro-toast" role="status" aria-live="polite">
-          <span className="toast-spark">✨</span>
-          <span>{toastMsg}</span>
-        </div>
-      )}
     </section>
   );
 }

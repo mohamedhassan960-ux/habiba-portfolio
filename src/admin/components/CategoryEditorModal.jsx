@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { usePortfolioData } from '../../context/PortfolioDataContext';
+import { useAdmin } from '../context/AdminContext';
 
 const COLOR_OPTIONS = [
   { label: 'Candy Pink', value: 'var(--candy)' },
@@ -10,7 +10,7 @@ const COLOR_OPTIONS = [
 ];
 
 export default function CategoryEditorModal() {
-  const { categoryModal, setCategoryModal, updateCategory } = usePortfolioData();
+  const { categoryModal, setCategoryModal, updateCategory } = useAdmin();
   const { isOpen, category } = categoryModal || {};
 
   const [nameAr, setNameAr] = useState('');
@@ -18,7 +18,6 @@ export default function CategoryEditorModal() {
   const [descAr, setDescAr] = useState('');
   const [descEn, setDescEn] = useState('');
   const [color, setColor] = useState('var(--candy)');
-  const [activeTab, setActiveTab] = useState('ar');
 
   useEffect(() => {
     if (isOpen && category) {
@@ -67,7 +66,7 @@ export default function CategoryEditorModal() {
             <i />
             <i />
           </div>
-          <b>تعديل اسم التبويب ✿ | Edit Tab</b>
+          <b>تعديل اسم التبويب والمجلد ✿ | Edit Folder Tab</b>
           <button
             type="button"
             className="retro-modal-close"
@@ -82,7 +81,7 @@ export default function CategoryEditorModal() {
         <form onSubmit={handleSave}>
           <div className="retro-modal-body">
             {/* Live Tab Preview */}
-            <div className="mb-4 p-3 rounded-2xl bg-[var(--paper)] border-2 border-dashed border-[var(--plum)] flex flex-col items-center">
+            <div className="mb-4 p-3 rounded-2xl bg-[var(--paper-tint)] border-2 border-dashed border-[var(--plum)] flex flex-col items-center">
               <span className="text-xs font-bold opacity-75 mb-2">معاينة شكل التبويب (Tab Preview):</span>
               <div
                 className="tab active"
@@ -112,7 +111,7 @@ export default function CategoryEditorModal() {
                 placeholder="مثال: سوشيال ميديا وإعلانات"
                 required
               />
-              <small className="modal-hint">يظهر مباشرة على لسان المجلد في الموقع عند اختيار اللغة العربية.</small>
+              <small className="modal-hint block text-xs opacity-75 mt-1">يظهر مباشرة على لسان المجلد في الموقع عند اختيار اللغة العربية.</small>
             </div>
 
             <div className="modal-field-group">
@@ -126,7 +125,7 @@ export default function CategoryEditorModal() {
                 placeholder="e.g. Social Media & Ads"
                 required
               />
-              <small className="modal-hint">Appears on the tab when switching to English mode.</small>
+              <small className="modal-hint block text-xs opacity-75 mt-1">Appears on the tab when switching to English mode.</small>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

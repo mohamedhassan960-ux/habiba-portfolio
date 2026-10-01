@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { WHATSAPP_CONFIG } from '../data/portfolioData';
-import EditableElement from './admin/EditableElement';
 
 // Pixel art matrix definitions
 const HEART_MATRIX = [
@@ -476,20 +475,13 @@ export default function Hero({ lang, content }) {
             <span className="w-o">
               <span className="tip">{isRTL ? 'أنا هنا ✿' : "that's me ✿"}</span>
               <span className="char" ref={heroCharRef} data-char="">
-                <EditableElement
-                  path="hero.portrait"
-                  title="صورة ستيكر الشخصية (الكرتونية)"
-                  hint="تعديل أو رفع صورة ستيكر الشخصية الظاهرة داخل الحرف"
-                  type="image"
-                >
-                  <img
-                    src={content.portrait || "/images/habiba-sticker.png"}
-                    alt="Habiba Yasser"
-                    width="820"
-                    height="982"
-                    draggable="false"
-                  />
-                </EditableElement>
+                <img
+                  src={content.portrait || "/images/habiba-sticker.png"}
+                  alt="Habiba Yasser"
+                  width="820"
+                  height="982"
+                  draggable="false"
+                />
               </span>
             </span>
 
@@ -612,20 +604,8 @@ export default function Hero({ lang, content }) {
             >
               <div>
                 <div>
-                  <EditableElement
-                    path="hero.name"
-                    title="اسم المصممة | Designer Name"
-                    hint="تعديل اسم المصممة في الترويسة والنافذة المعلقة"
-                  >
-                    <strong>{content.name}</strong>
-                  </EditableElement>
-                  <EditableElement
-                    path="hero.eyebrow"
-                    title="الوصف والكلية | Subtitle"
-                    hint="تعديل الوصف الأكاديمي والمهني (طالبة بكلية الفنون الجميلة...)"
-                  >
-                    <small>{content.eyebrow}</small>
-                  </EditableElement>
+                  <strong>{content.name}</strong>
+                  <small>{content.eyebrow}</small>
                 </div>
               </div>
             </div>
@@ -748,22 +728,8 @@ export default function Hero({ lang, content }) {
         {/* Hero Footer Information */}
         <div className="hero-foot">
           <div className="hero-role" data-r>
-            <EditableElement
-              path="hero.title"
-              title="المسمى الوظيفي والمدينة | Role Title"
-              hint="تعديل المسمى الوظيفي ومكان الإقامة (مصممة جرافيك ومونتيرة من القاهرة، مصر...)"
-            >
-              <span>{content.title || (isRTL ? 'مصممة جرافيك ومونتيرة من القاهرة، مصر.' : 'Graphic designer & video editor based in Cairo, Egypt.')}</span>
-            </EditableElement>
-            <EditableElement
-              path="hero.description"
-              title="النبذة الترحيبية | Hero Bio"
-              hint="تعديل النبذة الترحيبية والتعريفية أسفل الشعار"
-              type="textarea"
-              block
-            >
-              <span>{content.description}</span>
-            </EditableElement>
+            <span>{content.title || (isRTL ? 'مصممة جرافيك ومونتيرة من القاهرة، مصر.' : 'Graphic designer & video editor based in Cairo, Egypt.')}</span>
+            <span>{content.description}</span>
           </div>
           <div className="hero-cta" data-r style={{ '--d': '.1s' }}>
             <a className="btn btn-candy" href="#work">

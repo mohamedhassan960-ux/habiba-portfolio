@@ -1,70 +1,262 @@
 /* ==========================================================================
-   HABIBA YASSER VISUAL CMS & DASHBOARD STYLES (Retro-Digital System)
+   HABIBA YASSER - DEDICATED ADMIN DASHBOARD STYLES (Retro-Digital Identity)
    ========================================================================== */
 
-/* 1. Admin Top Floating Toolbar */
-.admin-toolbar-root {
-  position: fixed;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 9999;
+/* 1. Login Screen */
+.admin-login-wrap {
+  min-height: 100vh;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 2.5px solid var(--plum);
-  border-radius: 999px;
-  box-shadow: 0 8px 24px rgba(46, 26, 58, 0.15), 4px 4px 0 var(--plum);
-  font-family: var(--sans);
-  direction: ltr;
-  max-width: calc(100vw - 24px);
-  flex-wrap: wrap;
   justify-content: center;
-  transition: all 0.35s var(--spring);
-}
-
-[dir="rtl"] .admin-toolbar-root {
+  padding: 24px;
+  background: radial-gradient(circle at 50% 30%, #FCE7F3 0%, #FFFFFF 70%, #C7D2FE 100%);
+  font-family: var(--sans);
   direction: rtl;
+  position: relative;
+  overflow: hidden;
 }
 
-.admin-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
+.admin-login-card {
+  width: min(440px, 100%);
+  background: var(--paper);
+  border: 3px solid var(--plum);
+  border-radius: 24px;
+  box-shadow: 8px 12px 0 var(--candy), 0 20px 40px rgba(15, 23, 42, 0.15);
+  overflow: hidden;
+  animation: scaleIn 0.35s var(--spring);
+}
+
+.admin-login-head {
   background: var(--candy);
   color: #fff;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  padding: 16px 20px;
+  border-bottom: 2.5px solid var(--plum);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.admin-badge i {
-  width: 8px;
-  height: 8px;
+.admin-login-head .win-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.admin-login-head .win-dots i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid var(--plum);
+  display: inline-block;
+}
+
+.admin-login-head .win-dots i:nth-child(1) { background: #FF5F56; }
+.admin-login-head .win-dots i:nth-child(2) { background: #FFBD2E; }
+.admin-login-head .win-dots i:nth-child(3) { background: #27C93F; }
+
+.admin-login-body {
+  padding: 32px 26px;
+}
+
+.admin-login-avatar {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  border: 2.5px solid var(--plum);
+  background: #FFE2EE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  box-shadow: 3px 4px 0 var(--plum);
+}
+
+.admin-login-title {
+  text-align: center;
+  font-family: var(--ar);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--plum);
+  margin-bottom: 6px;
+}
+
+.admin-login-sub {
+  text-align: center;
+  font-size: 13px;
+  color: var(--plum-2);
+  opacity: 0.8;
+  margin-bottom: 24px;
+}
+
+.admin-input-group {
+  margin-bottom: 20px;
+}
+
+.admin-input-label {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: var(--plum);
+}
+
+.admin-input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.admin-input {
+  width: 100%;
+  padding: 12px 16px;
+  padding-left: 44px;
+  border: 2px solid var(--plum);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--plum);
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.admin-input:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 3px 3px 0 var(--primary-blue);
+}
+
+.admin-input-toggle {
+  position: absolute;
+  left: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.admin-input-toggle:hover {
+  opacity: 1;
+}
+
+.admin-login-btn {
+  width: 100%;
+  padding: 12px 20px;
+  background: var(--candy);
+  color: #fff;
+  border: 2.5px solid var(--plum);
+  border-radius: 999px;
+  font-family: var(--ar);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 4px 5px 0 var(--plum);
+  transition: all 0.25s var(--spring);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.admin-login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 5px 7px 0 var(--plum);
+  background: #1e40af;
+}
+
+.admin-login-btn:active {
+  transform: translateY(1px);
+  box-shadow: 2px 2px 0 var(--plum);
+}
+
+.admin-back-link {
+  display: block;
+  text-align: center;
+  margin-top: 18px;
+  color: var(--plum);
+  font-size: 13px;
+  text-decoration: underline;
+  opacity: 0.75;
+  cursor: pointer;
+}
+
+.admin-back-link:hover {
+  opacity: 1;
+}
+
+.login-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92) translateY(16px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* 2. Admin Top Header / Toolbar */
+.dashboard-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 2.5px solid var(--plum);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-family: var(--sans);
+  direction: rtl;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
+.dashboard-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboard-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--candy);
+  color: #fff;
+  border: 1.5px solid var(--plum);
+  border-radius: 999px;
+  font-family: var(--ar);
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 2px 2px 0 var(--plum);
+}
+
+.dashboard-badge i {
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: #FFE066;
   animation: pulse-dot 1.8s infinite;
 }
 
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.8); }
-}
-
-.admin-actions {
+.dashboard-actions {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.admin-btn {
+.dash-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -76,48 +268,67 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.25s var(--spring);
+  transition: all 0.2s var(--spring);
   text-decoration: none;
   white-space: nowrap;
 }
 
-.admin-btn:hover {
+.dash-btn:hover {
   transform: translateY(-2px);
   box-shadow: 2px 3px 0 var(--plum);
-  background: var(--paper);
+  background: var(--paper-tint);
 }
 
-.admin-btn.primary {
-  background: var(--primary-blue);
+.dash-btn.primary {
+  background: var(--candy);
   color: #fff;
-  border-color: var(--primary-blue);
+  border-color: var(--plum);
+  box-shadow: 2px 2px 0 var(--plum);
 }
 
-.admin-btn.primary:hover {
+.dash-btn.primary:hover {
   background: #1e40af;
-  box-shadow: 2px 3px 0 var(--plum);
+  box-shadow: 3px 4px 0 var(--plum);
 }
 
-.admin-btn.export {
+.dash-btn.export {
   background: #10B981;
   color: #fff;
-  border-color: #059669;
+  border-color: var(--plum);
+  box-shadow: 2px 2px 0 var(--plum);
 }
 
-.admin-btn.export:hover {
+.dash-btn.export:hover {
   background: #059669;
+  box-shadow: 3px 4px 0 var(--plum);
 }
 
-.admin-btn.danger {
+.dash-btn.danger {
   color: #DC2626;
   border-color: #FECACA;
 }
 
-.admin-btn.danger:hover {
+.dash-btn.danger:hover {
   background: #FEE2E2;
 }
 
-/* 2. Visual In-Context Editable Element Pin & Outline */
+/* 3. Administrative Canvas & Editable Affordances */
+.admin-canvas-banner {
+  background: linear-gradient(135deg, #FFE2EE 0%, #C7D2FE 100%);
+  border-bottom: 2px dashed var(--plum);
+  padding: 12px 20px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--plum);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Visual In-Context Editable Element Pin & Outline */
 .editable-container {
   position: relative;
   transition: outline 0.2s, outline-offset 0.2s;
@@ -135,13 +346,6 @@
   border-radius: 8px;
 }
 
-/* Ensure any element inside EditableElement is never hidden by data-r */
-.editable-container [data-r],
-.editable-container[data-r] {
-  opacity: 1 !important;
-  translate: 0 0 !important;
-}
-
 .edit-pin-btn {
   position: absolute;
   top: -8px;
@@ -150,17 +354,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   background: #fff;
   border: 2px solid var(--plum);
   border-radius: 50%;
   color: var(--primary-blue);
-  font-size: 13px;
+  font-size: 14px;
   cursor: pointer;
   box-shadow: 2px 3px 0 var(--plum);
   transition: all 0.25s var(--spring);
-  opacity: 0.85;
+  opacity: 0.92;
 }
 
 [dir="rtl"] .edit-pin-btn {
@@ -175,7 +379,7 @@
   color: var(--plum);
 }
 
-/* 3. Comprehensive Tooltip explaining what can be edited */
+/* Tooltip */
 .edit-tooltip {
   position: absolute;
   bottom: calc(100% + 8px);
@@ -194,6 +398,9 @@
   box-shadow: 0 4px 14px rgba(46, 26, 58, 0.25), 2px 3px 0 var(--candy);
   z-index: 50;
   transition: opacity 0.2s, transform 0.25s var(--spring);
+  font-family: var(--ar);
+  direction: rtl;
+  text-align: right;
 }
 
 .edit-tooltip::after {
@@ -220,12 +427,12 @@
   margin-bottom: 2px;
 }
 
-/* 4. Retro Modal Overlay & Window */
+/* Modals */
 .retro-modal-backdrop {
   position: fixed;
   inset: 0;
   z-index: 10000;
-  background: rgba(46, 26, 58, 0.55);
+  background: rgba(15, 23, 42, 0.65);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;
@@ -234,6 +441,7 @@
   padding: 16px;
   overflow-y: auto;
   animation: fadeInModal 0.25s ease-out;
+  direction: rtl;
 }
 
 @keyframes fadeInModal {
@@ -243,11 +451,11 @@
 
 .retro-modal-window {
   position: relative;
-  width: min(620px, 100%);
+  width: min(640px, 100%);
   background: var(--paper);
   border: 3px solid var(--plum);
   border-radius: 20px;
-  box-shadow: 8px 12px 0 var(--candy), 0 20px 40px rgba(0, 0, 0, 0.2);
+  box-shadow: 8px 12px 0 var(--candy), 0 20px 40px rgba(0, 0, 0, 0.25);
   color: var(--plum);
   font-family: var(--sans);
   overflow: hidden;
@@ -287,9 +495,9 @@
 .retro-modal-header .win-dots i:nth-child(3) { background: #27C93F; }
 
 .retro-modal-header b {
+  font-family: var(--ar);
   font-size: 15px;
   font-weight: 700;
-  letter-spacing: 0.02em;
 }
 
 .retro-modal-close {
@@ -299,8 +507,8 @@
   color: var(--plum);
   font-size: 13px;
   font-weight: 700;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   display: grid;
   place-content: center;
   cursor: pointer;
@@ -362,7 +570,6 @@
   line-height: 28px;
 }
 
-/* Image Upload & Dropzone */
 .image-upload-zone {
   display: flex;
   flex-direction: column;
@@ -384,8 +591,8 @@
 }
 
 .image-preview-box {
-  width: 120px;
-  height: 120px;
+  width: 130px;
+  height: 130px;
   border-radius: 14px;
   overflow: hidden;
   border: 2px solid var(--plum);
@@ -405,7 +612,7 @@
   justify-content: flex-end;
   gap: 12px;
   padding: 16px 22px;
-  border-top: 2px dashed rgba(46, 26, 58, 0.2);
+  border-top: 2px dashed rgba(15, 23, 42, 0.2);
   background: var(--paper);
 }
 
@@ -428,7 +635,7 @@
 .modal-btn.save:hover {
   transform: translateY(-2px);
   box-shadow: 4px 5px 0 var(--plum);
-  background: #E8336F;
+  background: #1e40af;
 }
 
 .modal-btn.cancel {
@@ -440,105 +647,29 @@
   background: var(--blush);
 }
 
-/* 7. Boarding Pass CMS Layout Safeguards */
-.pass-head .editable-container {
-  display: inline-flex;
-}
-
-.pass-head .edit-pin-btn {
-  top: -6px;
-  right: -6px;
-}
-
-[dir="rtl"] .pass-head .edit-pin-btn {
-  right: auto;
-  left: -6px;
-}
-
-.pass-fields .editable-container {
-  display: block;
-  width: 100%;
-}
-
-.pass-fields .edit-pin-btn {
-  top: -4px;
-  right: -4px;
-  width: 22px;
-  height: 22px;
-  font-size: 11px;
-}
-
-[dir="rtl"] .pass-fields .edit-pin-btn {
-  right: auto;
-  left: -4px;
-}
-
-.pass-stub .editable-container {
-  display: block;
-  width: 100%;
-}
-
-.pass-stub .edit-pin-btn {
-  top: -4px;
-  right: -4px;
-}
-
-[dir="rtl"] .pass-stub .edit-pin-btn {
-  right: auto;
-  left: -4px;
-}
-
-/* ==========================================================================
-   Tab Editing & Drag-and-Drop Category Reassignment Styles
-   ========================================================================== */
-
-/* Tab Edit Pin Button */
+/* Category Pins & Card Pins */
 .tab-edit-pin {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   margin-inline-start: 6px;
-  font-size: 10px;
+  font-size: 11px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.95);
   border: 1.5px solid var(--plum);
   box-shadow: 1px 1px 0 var(--plum);
   cursor: pointer;
-  transition: transform 0.2s var(--spring), background-color 0.15s;
+  transition: transform 0.2s var(--spring);
   vertical-align: middle;
-  line-height: 1;
 }
 
 .tab-edit-pin:hover {
-  transform: scale(1.22) rotate(15deg);
-  background: #ffffff;
+  transform: scale(1.2) rotate(15deg);
+  background: #FFE066;
 }
 
-/* Tab Drag-over State */
-.tab.drop-target {
-  translate: 0 -4px !important;
-  box-shadow: 0 0 0 3px var(--primary-blue), 0 -4px 14px rgba(29, 78, 216, 0.35) !important;
-  border-color: var(--primary-blue) !important;
-  animation: tab-pulse 0.75s ease-in-out infinite alternate;
-}
-
-@keyframes tab-pulse {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.05); }
-}
-
-/* Project Card Dragging Styles */
-.card.is-dragging {
-  opacity: 0.45 !important;
-  transform: scale(0.97) rotate(-2deg) !important;
-  cursor: grabbing !important;
-  outline: 2.5px dashed var(--primary-blue) !important;
-  outline-offset: 4px;
-}
-
-/* Card Admin Pins Container */
 .card-admin-pins {
   position: absolute;
   top: 12px;
@@ -561,34 +692,7 @@
   left: auto !important;
 }
 
-/* Card Drag Handle Badge */
-.card-drag-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--butter);
-  border: 2px solid var(--plum);
-  box-shadow: 2px 2px 0 var(--plum);
-  color: var(--plum);
-  font-size: 14px;
-  font-weight: 800;
-  cursor: grab;
-  transition: transform 0.2s var(--spring), background 0.15s;
-}
-
-.card-drag-badge:hover {
-  transform: scale(1.15) rotate(180deg);
-  background: #FFF066;
-}
-
-.card-drag-badge:active {
-  cursor: grabbing;
-}
-
-/* Retro Toast Notification */
+/* Retro Toast */
 .retro-toast {
   position: fixed;
   bottom: 28px;
@@ -602,17 +706,13 @@
   background: #ffffff;
   border: 2.5px solid var(--plum);
   border-radius: 999px;
-  box-shadow: 0 8px 24px rgba(46, 26, 58, 0.2), 4px 4px 0 var(--plum);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.2), 4px 4px 0 var(--plum);
   color: var(--plum);
-  font-family: var(--sans);
+  font-family: var(--ar);
   font-size: 14px;
   font-weight: 700;
   animation: toast-in 0.4s var(--spring) forwards;
   pointer-events: none;
-}
-
-[dir="rtl"] .retro-toast {
-  font-family: var(--ar);
   direction: rtl;
 }
 
@@ -630,5 +730,3 @@
   0%, 100% { transform: scale(1) rotate(0deg); }
   50% { transform: scale(1.25) rotate(15deg); }
 }
-
-

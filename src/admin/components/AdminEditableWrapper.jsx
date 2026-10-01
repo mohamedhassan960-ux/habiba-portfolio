@@ -1,7 +1,7 @@
 import React from 'react';
-import { usePortfolioData } from '../../context/PortfolioDataContext';
+import { useAdmin } from '../context/AdminContext';
 
-export default function EditableElement({
+export default function AdminEditableWrapper({
   children,
   path,
   title,
@@ -12,14 +12,13 @@ export default function EditableElement({
   className = '',
   customTrigger = null
 }) {
-  const { isAdmin, previewMode, setFieldModal, content, data } = usePortfolioData();
+  const { previewMode, setFieldModal, content, data } = useAdmin();
 
-  // If visitor mode or preview mode, render child as-is
-  if (!isAdmin || previewMode) {
+  // If in Preview Mode, render plain children without admin decorations
+  if (previewMode) {
     return children;
   }
 
-  // Extract current values from content
   const getDeep = (obj, p) => {
     if (!obj) return '';
     return p.split('.').reduce((acc, k) => (acc && acc[k] !== undefined ? acc[k] : ''), obj);
@@ -41,7 +40,7 @@ export default function EditableElement({
       isOpen: true,
       path,
       title: title || 'تعديل المحتوى | Edit Content',
-      hint: hint || 'يمكنك تعديل هذا النص وحفظ التغييرات فوراً ليتم تحديث الموقع مباشرة.',
+      hint: hint || 'يمكنك تعديل هذا المحتوى ثم الضغط على حفظ ليتم تحديث الموقع فوراً.',
       type,
       currentAr: typeof currentAr === 'string' ? currentAr : JSON.stringify(currentAr),
       currentEn: typeof currentEn === 'string' ? currentEn : JSON.stringify(currentEn),
@@ -53,7 +52,6 @@ export default function EditableElement({
     <div
       className={`editable-container cms-active ${block ? 'block' : ''} ${className}`}
       onClick={(e) => {
-        // Option to click element directly or pin
         if (e.altKey) {
           handleOpenEdit(e);
         }
@@ -64,13 +62,13 @@ export default function EditableElement({
       <button
         type="button"
         className="edit-pin-btn"
-        aria-label={`تعديل: ${title || path}`}
+        aria-label={title || `تعديل: ${path}`}
         onClick={handleOpenEdit}
       >
         <span aria-hidden="true">✏️</span>
-        <div className="edit-tooltip">
+        <div className="edit-tooltip" role="tooltip">
           <b>{title || 'تعديل هذا العنصر'}</b>
-          <span>{hint || 'انقر لتعديل المحتوى وتحديث الموقع فوراً'}</span>
+          <span>{hint || 'انقر لفتح المحرر وتحديث المحتوى في الموقع فوراً'}</span>
         </div>
       </button>
     </div>

@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { WHATSAPP_CONFIG, SOCIAL_LINKS } from '../data/portfolioData';
-import EditableElement from './admin/EditableElement';
 
 export default function Contact({ lang, content }) {
   const isRTL = lang === 'ar';
-  const { eyebrow, heading, subheading, email } = content;
+  const { eyebrow, email } = content;
   const targetEmail = email || 'habibamarghani1@gmail.com';
 
   const [isFlipped, setIsFlipped] = useState(false);
@@ -365,14 +364,7 @@ export default function Contact({ lang, content }) {
 
                   {/* Stamp with Habiba portrait */}
                   <span className="mc-stamp" aria-hidden="true">
-                    <EditableElement
-                      path="contact.stamp"
-                      title="صورة طابع البريد | Stamp Portrait"
-                      hint="تعديل أو رفع الصورة المصغرة في طابع البريد الكلاسيكي"
-                      type="image"
-                    >
-                      <img src="/images/habiba-portrait.png" alt="Habiba" />
-                    </EditableElement>
+                    <img src="/images/habiba-portrait.png" alt="Habiba" />
                   </span>
 
                   {/* Cairo Postmark */}
@@ -385,16 +377,9 @@ export default function Contact({ lang, content }) {
                   {/* Mailcard Bottom Details */}
                   <div className="mcb">
                     <span className="mcb-lab">{isRTL ? 'راسلني على' : 'Say hi at'}</span>
-                    <EditableElement
-                      path="contact.email"
-                      title="البريد الإلكتروني للتواصل | Contact Email"
-                      hint="تعديل البريد الذي تصل إليه الرسائل ويظهر على الكارت"
-                      isBilingual={false}
-                    >
-                      <a className="mcb-mail" href={`mailto:${targetEmail}`} onClick={(e) => e.stopPropagation()}>
-                        {targetEmail}
-                      </a>
-                    </EditableElement>
+                    <a className="mcb-mail" href={`mailto:${targetEmail}`}>
+                      {targetEmail}
+                    </a>
                     <div className="mcb-actions">
                       <button
                         className="btn btn-candy cursor-pointer"

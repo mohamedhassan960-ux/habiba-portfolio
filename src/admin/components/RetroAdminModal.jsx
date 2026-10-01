@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { usePortfolioData } from '../../context/PortfolioDataContext';
+import { useAdmin } from '../context/AdminContext';
 
 export default function RetroAdminModal() {
-  const { fieldModal, setFieldModal, updateBilingualField, updateSingleField } = usePortfolioData();
+  const { fieldModal, setFieldModal, updateBilingualField, updateSingleField } = useAdmin();
   const { isOpen, path, title, hint, type, currentAr, currentEn, isBilingual } = fieldModal;
 
   const [valAr, setValAr] = useState('');
   const [valEn, setValEn] = useState('');
   const [activeTab, setActiveTab] = useState('ar');
   const [imgPreview, setImgPreview] = useState('');
-  const [uploadedPdfName, setUploadedPdfName] = useState('');
+  const [uploadedFileName, setUploadedFileName] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     if (isOpen) {
       setValAr(currentAr || '');
       setValEn(currentEn || '');
+      setErrorMsg('');
       if (type === 'image') {
         setImgPreview(currentAr || '');
       }
       if (type === 'pdf' || type === 'file') {
-        setUploadedPdfName('');
+        setUploadedFileName('');
       }
     }
   }, [isOpen, currentAr, currentEn, type]);
@@ -33,6 +35,16 @@ export default function RetroAdminModal() {
   const handleImageFileChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setErrorMsg('يرجى اختيار ملف صورة صالح (PNG, JPG, WebP)');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setErrorMsg('تنبيه: حجم الصورة كبير نسبياً (أكبر من 5 ميجابايت)، يُفضل تقليل حجمها للأداء');
+    } else {
+      setErrorMsg('');
+    }
 
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -50,7 +62,13 @@ export default function RetroAdminModal() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setUploadedPdfName(file.name);
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      setErrorMsg('يرجى اختيار ملف سيرة ذاتية بصيغة PDF فقط');
+      return;
+    }
+    setErrorMsg('');
+    setUploadedFileName(file.name);
+
     const reader = new FileReader();
     reader.onload = (event) => {
       const base64 = event.target?.result;
@@ -87,7 +105,7 @@ export default function RetroAdminModal() {
             <i />
             <i />
           </div>
-          <b>{title || 'تعديل المحتوى | Edit Content'}</b>
+          <b>{title || 'تعديل المحتوى ✿ | Edit Content'}</b>
           <button
             type="button"
             className="retro-modal-close"
@@ -102,6 +120,14 @@ export default function RetroAdminModal() {
         <form onSubmit={handleSave}>
           <div className="retro-modal-body">
             {hint && <p className="field-hint text-sm text-[var(--plum)] mb-4 opacity-80">{hint}</p>}
+
+            {/* Error Message */}
+            {errorMsg && (
+              <div className="p-3 mb-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-bold flex items-center gap-2">
+                <span>⚠️</span>
+                <span>{errorMsg}</span>
+              </div>
+            )}
 
             {/* Language Tabs if Bilingual */}
             {isBilingual && type !== 'image' && (
@@ -126,7 +152,7 @@ export default function RetroAdminModal() {
             {/* Type: Image Upload / URL */}
             {type === 'image' ? (
               <div className="modal-field-group">
-                <label>صورة العنصر (Image Preview & Upload):</label>
+                <label>معاينة واختيار الصورة (Image Preview & Upload):</label>
                 {imgPreview && (
                   <div className="flex justify-center mb-3">
                     <div className="image-preview-box">
@@ -148,10 +174,11 @@ export default function RetroAdminModal() {
                 </label>
 
                 <div className="mt-2">
-                  <label className="text-xs">أو أدخل مسار / رابط الصورة المباشر:</label>
+                  <label className="text-xs font-bold block mb-1">أو أدخل مسار أو رابط الصورة المباشر:</label>
                   <input
                     type="text"
                     className="modal-input text-sm"
+                    dir="ltr"
                     value={valAr}
                     onChange={(e) => {
                       setValAr(e.target.value);
@@ -167,17 +194,17 @@ export default function RetroAdminModal() {
                 <label>إدارة ورفع ملف السيرة الذاتية (CV / Resume PDF):</label>
 
                 {valAr && (
-                  <div className="p-3 bg-[var(--paper)] rounded-xl border-2 border-[var(--plum)] mb-4 flex items-center justify-between gap-3 flex-wrap">
+                  <div className="p-3 bg-[var(--paper-tint)] rounded-xl border-2 border-[var(--plum)] mb-4 flex items-center justify-between gap-3 flex-wrap">
                     <div className="flex items-center gap-2">
                       <span className="text-2xl">📄</span>
                       <div>
                         <div className="font-bold text-xs text-[var(--plum)]">
-                          {uploadedPdfName || (valAr.startsWith('data:') ? 'ملف PDF مخصص (جاهز ومحفوظ)' : valAr.split('/').pop() || 'Habiba-Yasser-CV.pdf')}
+                          {uploadedFileName || (valAr.startsWith('data:') ? 'ملف PDF مخصص ومحفوظ جاهز' : valAr.split('/').pop() || 'Habiba-Yasser-CV.pdf')}
                         </div>
                         <div className="text-[11px] opacity-75">
                           {valAr.startsWith('data:')
                             ? `الحجم التقريبي: ~${Math.round(valAr.length * 0.75 / 1024)} كيلوبايت`
-                            : 'الملف النشط حالياً في الموقع'}
+                            : 'الملف النشط حالياً'}
                         </div>
                       </div>
                     </div>
@@ -213,6 +240,7 @@ export default function RetroAdminModal() {
                   <input
                     type="text"
                     className="modal-input text-sm"
+                    dir="ltr"
                     value={valAr}
                     onChange={(e) => {
                       setValAr(e.target.value);

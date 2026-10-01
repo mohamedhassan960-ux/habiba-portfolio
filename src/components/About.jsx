@@ -1,15 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { WHATSAPP_CONFIG, SOCIAL_LINKS } from '../data/portfolioData';
-import EditableElement from './admin/EditableElement';
 
 export default function About({ lang, content }) {
   const isRTL = lang === 'ar';
   const {
-    eyebrow,
-    sectionTitle,
     headline,
     bio,
-    credentials,
     boardingPass
   } = content;
 
@@ -277,22 +273,14 @@ export default function About({ lang, content }) {
                 </span>
                 habiba_irl.jpg
               </div>
-              <EditableElement
-                path="about.portrait.image"
-                title="صورة البورتريه الواقعية | IRL Photo"
-                hint="تعديل أو رفع الصورة الحقيقية لحبيبة"
-                type="image"
-                block
-              >
-                <img
-                  src={content.portrait?.image || "/images/habiba-portrait.jpg"}
-                  alt="Habiba Yasser"
-                  width={900}
-                  height={1150}
-                  loading="lazy"
-                  draggable={false}
-                />
-              </EditableElement>
+              <img
+                src={content.portrait?.image || "/images/habiba-portrait.jpg"}
+                alt="Habiba Yasser"
+                width={900}
+                height={1150}
+                loading="lazy"
+                draggable={false}
+              />
             </figure>
 
             {/* Cartoon Standin with Interactive Iced Coffee */}
@@ -400,30 +388,15 @@ export default function About({ lang, content }) {
               {isRTL ? 'أهلاً، أنا حبيبة' : "Hi, I'm Habiba"}
             </h2>
 
-            <EditableElement
-              path="about.headline"
-              title="عنوان النبذة الشخصية | Headline"
-              hint="تعديل السطر البارز في النبذة الشخصية"
-              block
-            >
-              <p className="lead text-lg font-medium leading-relaxed my-4 text-[var(--plum)]">
-                {headline || (isRTL
-                  ? 'طالبة بكلية الفنون الجميلة بالقاهرة (دفعة ٢٠٢٨)، ومصممة جرافيك ومونتيرة مستقلة.'
-                  : 'Fine Arts student at Cairo University (Class of 2028), graphic designer and video editor.')}
-              </p>
-            </EditableElement>
+            <p className="lead text-lg font-medium leading-relaxed my-4 text-[var(--plum)]">
+              {headline || (isRTL
+                ? 'طالبة بكلية الفنون الجميلة بالقاهرة (دفعة ٢٠٢٨)، ومصممة جرافيك ومونتيرة مستقلة.'
+                : 'Fine Arts student at Cairo University (Class of 2028), graphic designer and video editor.')}
+            </p>
 
-            <EditableElement
-              path="about.bio"
-              title="النبذة الكاملة عن المصممة | Full Bio"
-              hint="تعديل النص الكامل حول دراستك ورؤيتك التصميمية وخبرتك"
-              type="textarea"
-              block
-            >
-              <p className="text-base opacity-85 leading-relaxed mb-6">
-                {bio}
-              </p>
-            </EditableElement>
+            <p className="text-base opacity-85 leading-relaxed mb-6">
+              {bio}
+            </p>
 
             {/* Level & Specialty Badges */}
             <ul className="skills" data-r aria-label="Level and specialties">
@@ -594,25 +567,13 @@ export default function About({ lang, content }) {
                     </svg>
                     {isRTL ? 'تذكرة صعود الطائرة' : 'Boarding pass'}
                   </span>
-                  <EditableElement
-                    path="about.boardingPass.flight"
-                    title="رقم الرحلة | Flight Code"
-                    hint="تعديل رمز ورقم الرحلة (مثال: Flight HY 2028)"
-                  >
-                    <span>{bp.flight || 'Flight HY 2028'}</span>
-                  </EditableElement>
+                  <span>{bp.flight || 'Flight HY 2028'}</span>
                 </header>
 
                 <div className="pass-route">
                   <div className="city">
                     <b>{bp.fromCode || 'CAI'}</b>
-                    <EditableElement
-                      path="about.boardingPass.fromCity"
-                      title="مدينة المغادرة | Origin City"
-                      hint="تعديل اسم مدينة الإقلاع (مثال: القاهرة، مصر)"
-                    >
-                      <span>{bp.fromCity || (isRTL ? 'القاهرة، مصر' : 'Cairo, Egypt')}</span>
-                    </EditableElement>
+                    <span>{bp.fromCity || (isRTL ? 'القاهرة، مصر' : 'Cairo, Egypt')}</span>
                   </div>
                   <div className="route" aria-hidden="true">
                     <svg viewBox="0 0 24 24">
@@ -621,107 +582,45 @@ export default function About({ lang, content }) {
                   </div>
                   <div className="city to">
                     <b>{bp.toCode || 'YOU'}</b>
-                    <EditableElement
-                      path="about.boardingPass.toCity"
-                      title="وجهة الوصول | Destination"
-                      hint="تعديل وجهة الوصول (مثال: مشروعك وعلامتك)"
-                    >
-                      <span>{bp.toCity || (isRTL ? 'مشروعك وعلامتك' : 'Your brand')}</span>
-                    </EditableElement>
+                    <span>{bp.toCity || (isRTL ? 'مشروعك وعلامتك' : 'Your brand')}</span>
                   </div>
                 </div>
 
                 <dl className="pass-fields">
                   <div>
                     <dt>{isRTL ? 'المسافر' : 'Passenger'}</dt>
-                    <EditableElement
-                      path="about.boardingPass.passenger"
-                      title="اسم المسافر | Passenger"
-                      hint="تعديل اسم المسافر على التذكرة"
-                      block
-                    >
-                      <dd>{bp.passenger || (isRTL ? 'حبيبة ياسر' : 'Habiba Yasser')}</dd>
-                    </EditableElement>
+                    <dd>{bp.passenger || (isRTL ? 'حبيبة ياسر' : 'Habiba Yasser')}</dd>
                   </div>
                   <div>
                     <dt>{isRTL ? 'الدرجة' : 'Class'}</dt>
-                    <EditableElement
-                      path="about.boardingPass.degree"
-                      title="الدرجة والدفعة | Class"
-                      hint="تعديل الكلية وسنة التخرج"
-                      block
-                    >
-                      <dd>{bp.degree || (isRTL ? 'فنون جميلة، دفعة ٢٠٢٨' : 'Fine Arts, Class of 2028')}</dd>
-                    </EditableElement>
+                    <dd>{bp.degree || (isRTL ? 'فنون جميلة، دفعة ٢٠٢٨' : 'Fine Arts, Class of 2028')}</dd>
                   </div>
                   <div>
                     <dt>{isRTL ? 'التخصص' : 'Specialization'}</dt>
-                    <EditableElement
-                      path="about.boardingPass.specialty"
-                      title="التخصص المهني | Specialization"
-                      hint="تعديل التخصص الرئيسي (مثال: جرافيك ومونتاج فيديو)"
-                      block
-                    >
-                      <dd>{bp.specialty || (isRTL ? 'جرافيك ومونتاج فيديو' : 'Graphic Design & Video Editing')}</dd>
-                    </EditableElement>
+                    <dd>{bp.specialty || (isRTL ? 'جرافيك ومونتاج فيديو' : 'Graphic Design & Video Editing')}</dd>
                   </div>
                   <div>
                     <dt>{isRTL ? 'الاعتمادات الموثقة' : 'Verified Training'}</dt>
-                    <EditableElement
-                      path="about.boardingPass.certificates"
-                      title="الشهادات الموثقة | Verified Certificates"
-                      hint="تعديل الشهادات والاعتمادات الرسمية"
-                      block
-                    >
-                      <dd>{bp.certificates || 'TIEC & ITI Certificates'}</dd>
-                    </EditableElement>
+                    <dd>{bp.certificates || 'TIEC & ITI Certificates'}</dd>
                   </div>
                   <div>
                     <dt>{isRTL ? 'لغات التصميم' : 'Design Languages'}</dt>
-                    <EditableElement
-                      path="about.boardingPass.languages"
-                      title="لغات العمل | Design Languages"
-                      hint="تعديل لغات العمل والتصميم"
-                      block
-                    >
-                      <dd>{bp.languages || (isRTL ? 'العربية والإنجليزية' : 'Arabic & English')}</dd>
-                    </EditableElement>
+                    <dd>{bp.languages || (isRTL ? 'العربية والإنجليزية' : 'Arabic & English')}</dd>
                   </div>
                   <div>
                     <dt>{isRTL ? 'الحالة' : 'Status'}</dt>
-                    <EditableElement
-                      path="about.boardingPass.status"
-                      title="حالة التفرغ | Status"
-                      hint="تعديل حالة استقبال طلبات التصميم"
-                      block
-                    >
-                      <dd>{bp.status || (isRTL ? 'متاحة لمشاريع جديدة' : 'Open for projects')}</dd>
-                    </EditableElement>
+                    <dd>{bp.status || (isRTL ? 'متاحة لمشاريع جديدة' : 'Open for projects')}</dd>
                   </div>
                 </dl>
               </div>
 
               {/* Perforated Stub */}
               <div className="pass-stub">
-                <EditableElement
-                  path="about.boardingPass.stubLabel"
-                  title="عنوان القسيمة | Stub Label"
-                  hint="تعديل النص التعريفي أعلى الباركود"
-                  block
-                >
-                  <span className="stub-label text-xs uppercase font-bold tracking-wider opacity-70 block">
-                    {bp.stubLabel || (isRTL ? 'السيرة الذاتية والشهادات' : 'Credentials & CV')}
-                  </span>
-                </EditableElement>
+                <span className="stub-label text-xs uppercase font-bold tracking-wider opacity-70 block">
+                  {bp.stubLabel || (isRTL ? 'السيرة الذاتية والشهادات' : 'Credentials & CV')}
+                </span>
 
-                <EditableElement
-                  path="about.boardingPass.stubTitle"
-                  title="الاسم على القسيمة | Stub Name"
-                  hint="تعديل الاسم المطبوع أعلى الباركود"
-                  block
-                >
-                  <b className="stub-title block">{bp.stubTitle || (isRTL ? 'حبيبة ياسر' : 'Habiba Yasser')}</b>
-                </EditableElement>
+                <b className="stub-title block">{bp.stubTitle || (isRTL ? 'حبيبة ياسر' : 'Habiba Yasser')}</b>
 
                 <span className="barcode" aria-hidden="true" />
 
@@ -735,23 +634,15 @@ export default function About({ lang, content }) {
                     {isRTL ? 'اقرأ سيرتي الذاتية' : 'Read my CV'}
                   </button>
 
-                  <EditableElement
-                    path="about.boardingPass.cvUrl"
-                    title="ملف وتنزيل السيرة الذاتية (CV / Resume PDF)"
-                    hint="اضغط لرفع ملف السيرة الذاتية PDF من جهازك أو تعديل الرابط المباشر لتحديث زري القراءة والتحميل فوراً"
-                    type="pdf"
-                    block
+                  <a
+                    className="btn stub-dl text-center cursor-pointer w-full block"
+                    href={cvUrl}
+                    download={cvFileName}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    <a
-                      className="btn stub-dl text-center cursor-pointer w-full block"
-                      href={cvUrl}
-                      download={cvFileName}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {isRTL ? 'تحميل السيرة الذاتية (PDF)' : 'Download PDF 🠓'}
-                    </a>
-                  </EditableElement>
+                    {isRTL ? 'تحميل السيرة الذاتية (PDF)' : 'Download PDF 🠓'}
+                  </a>
                 </div>
               </div>
             </article>

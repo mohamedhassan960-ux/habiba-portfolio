@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { usePortfolioData } from '../../context/PortfolioDataContext';
+import { useAdmin } from '../context/AdminContext';
 
 export default function ProjectEditorModal() {
-  const { projectModal, setProjectModal, saveProject, deleteProject } = usePortfolioData();
+  const { projectModal, setProjectModal, saveProject, deleteProject } = useAdmin();
   const { isOpen, project, isNew } = projectModal;
 
   const [titleAr, setTitleAr] = useState('');
@@ -122,7 +122,7 @@ export default function ProjectEditorModal() {
             <i />
             <i />
           </div>
-          <b>{isNew ? 'إضافة مشروع جديد ✿ | Add Project' : 'تعديل بيانات المشروع | Edit Project'}</b>
+          <b>{isNew ? 'إضافة مشروع جديد ✿ | Add Project' : 'تعديل بيانات المشروع ✿ | Edit Project'}</b>
           <button
             type="button"
             className="retro-modal-close"
@@ -180,6 +180,7 @@ export default function ProjectEditorModal() {
               <input
                 type="text"
                 className="modal-input text-sm mb-3"
+                dir="ltr"
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
                 placeholder="/images/your-project.jpg"

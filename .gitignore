@@ -3,6 +3,7 @@ node_modules
 dist
 dist-ssr
 *.local
+.vercel
 
 # Temporary & debug media in root
 *.png

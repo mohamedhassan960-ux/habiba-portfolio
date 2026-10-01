@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import SkyAtmosphere from './components/SkyAtmosphere';
 import Hero from './components/Hero';
@@ -9,19 +9,50 @@ import About from './components/About';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Lightbox from './components/Lightbox';
-
-// Visual CMS & Admin Infrastructure
 import { PortfolioDataProvider, usePortfolioData } from './context/PortfolioDataContext';
-import AdminTopToolbar from './components/admin/AdminTopToolbar';
-import RetroAdminModal from './components/admin/RetroAdminModal';
-import ProjectEditorModal from './components/admin/ProjectEditorModal';
-import CategoryEditorModal from './components/admin/CategoryEditorModal';
-import './styles/admin.css';
 
-function AppContent() {
+// Code Splitting: Lazy load AdminApp so visitor never downloads Admin bundle
+const LazyAdminApp = lazy(() => import('./admin/AdminApp'));
+
+function AdminLoadingFallback() {
+  return (
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'radial-gradient(circle at 50% 30%, #FCE7F3 0%, #FFFFFF 70%, #C7D2FE 100%)',
+        fontFamily: "'Marhey', 'Alexandria', system-ui, sans-serif",
+        color: '#0F172A',
+        direction: 'rtl'
+      }}
+    >
+      <div
+        style={{
+          padding: '24px 36px',
+          background: '#FFFFFF',
+          border: '3px solid #0F172A',
+          borderRadius: '24px',
+          boxShadow: '6px 8px 0 #1D4ED8',
+          textAlign: 'center'
+        }}
+      >
+        <span style={{ fontSize: '36px', display: 'block', marginBottom: '12px' }}>🎨</span>
+        <b style={{ fontSize: '18px', display: 'block', color: '#1D4ED8', marginBottom: '6px' }}>
+          جاري فتح لوحة التحكم ✿
+        </b>
+        <span style={{ fontSize: '13px', opacity: 0.75 }}>لحظات ونكون جاهزين...</span>
+      </div>
+    </div>
+  );
+}
+
+function PublicPortfolio() {
   const [lang, setLang] = useState('ar');
   const [selectedWork, setSelectedWork] = useState(null);
-  const { content, isAdmin } = usePortfolioData();
+  const { content } = usePortfolioData();
 
   // Sync HTML lang and dir attributes on language change
   useEffect(() => {
@@ -57,7 +88,7 @@ function AppContent() {
       elements.forEach((el) => observer.unobserve(el));
       observer.disconnect();
     };
-  }, [lang, isAdmin]);
+  }, [lang]);
 
   const toggleLanguage = () => {
     setLang((prev) => (prev === 'ar' ? 'en' : 'ar'));
@@ -72,9 +103,6 @@ function AppContent() {
         lang === 'ar' ? 'font-sans-ar' : 'font-sans-en'
       }`}
     >
-      {/* Visual CMS Top Toolbar when in Admin Mode */}
-      <AdminTopToolbar lang={lang} />
-
       {/* 00. Celestial Sky & Astronomical Moon Atmosphere */}
       <SkyAtmosphere lang={lang} />
 
@@ -138,19 +166,49 @@ function AppContent() {
         lang={lang}
         content={currentContent.lightbox}
       />
-
-      {/* Visual CMS Modals */}
-      <RetroAdminModal />
-      <ProjectEditorModal />
-      <CategoryEditorModal />
     </div>
   );
 }
 
 export default function App() {
+  const checkIsAdmin = () => {
+    const hash = window.location.hash || '';
+    const pathname = window.location.pathname || '';
+    return (
+      hash.startsWith('#/admin') ||
+      hash.startsWith('#/dashboard') ||
+      hash === '#admin' ||
+      pathname.startsWith('/admin') ||
+      pathname.startsWith('/dashboard')
+    );
+  };
+
+  const [isAdminRoute, setIsAdminRoute] = useState(checkIsAdmin);
+
+  useEffect(() => {
+    const handleRoute = () => {
+      setIsAdminRoute(checkIsAdmin());
+    };
+
+    window.addEventListener('hashchange', handleRoute);
+    window.addEventListener('popstate', handleRoute);
+    return () => {
+      window.removeEventListener('hashchange', handleRoute);
+      window.removeEventListener('popstate', handleRoute);
+    };
+  }, []);
+
+  if (isAdminRoute) {
+    return (
+      <Suspense fallback={<AdminLoadingFallback />}>
+        <LazyAdminApp />
+      </Suspense>
+    );
+  }
+
   return (
     <PortfolioDataProvider>
-      <AppContent />
+      <PublicPortfolio />
     </PortfolioDataProvider>
   );
 }

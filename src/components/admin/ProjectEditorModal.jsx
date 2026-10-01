@@ -179,11 +179,25 @@ export default function ProjectEditorModal() {
 
               <input
                 type="text"
-                className="modal-input text-sm"
+                className="modal-input text-sm mb-3"
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
                 placeholder="/images/your-project.jpg"
               />
+
+              {/* Category Slug Selector */}
+              <div className="modal-field-group mb-1">
+                <label>مجلد وتصنيف المشروع في المعرض (Cabinet Category):</label>
+                <select
+                  className="modal-input cursor-pointer font-bold"
+                  value={categorySlug}
+                  onChange={(e) => setCategorySlug(e.target.value)}
+                >
+                  <option value="social">📁 سوشيال ميديا وإعلانات (Social Media & Ads)</option>
+                  <option value="media">📁 أغلفة كتب وميديا يوتيوب (Covers & YouTube)</option>
+                  <option value="brand">📁 هوية ودراسات فنية (Visual Studies & Brand)</option>
+                </select>
+              </div>
             </div>
 
             {/* Arabic Tab Fields */}

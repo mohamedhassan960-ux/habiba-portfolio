@@ -8,18 +8,19 @@ const TAPES = ['var(--butter)', 'var(--peri)', 'var(--mint)', '#ffffff', 'var(--
 export default function SelectedWorks({ lang, content, onSelectWork }) {
   const isRTL = lang === 'ar';
   const { items = [], eyebrow, sectionTitle, sectionSubtitle, viewFull } = content || {};
-  const { isAdmin, previewMode, setProjectModal } = usePortfolioData();
+  const { isAdmin, previewMode, setProjectModal, data } = usePortfolioData();
+  const currentCategories = data?.categories && data.categories.length > 0 ? data.categories : CATEGORIES;
 
-  // Build folder map from CATEGORIES
-  const folderKeys = CATEGORIES.map((c) => c.slug);
+  // Build folder map from currentCategories
+  const folderKeys = currentCategories.map((c) => c.slug);
   const [activeKey, setActiveKey] = useState('all');
   const cabinetRef = useRef(null);
   const folderRef = useRef(null);
   const tabsRef = useRef(null);
   const swipeStartRef = useRef(null);
 
-  const activeCategory = CATEGORIES.find((c) => c.slug === activeKey) || CATEGORIES[0];
-  const activeIndex = CATEGORIES.findIndex((c) => c.slug === activeKey);
+  const activeCategory = currentCategories.find((c) => c.slug === activeKey) || currentCategories[0];
+  const activeIndex = Math.max(0, currentCategories.findIndex((c) => c.slug === activeKey));
 
   const getFilteredItems = (key) => {
     if (key === 'all') return items;
@@ -32,13 +33,13 @@ export default function SelectedWorks({ lang, content, onSelectWork }) {
   useEffect(() => {
     const cab = cabinetRef.current;
     if (!cab) return;
-    const len = CATEGORIES.length;
-    const nextCat = CATEGORIES[(activeIndex + 1) % len];
-    const next2Cat = CATEGORIES[(activeIndex + 2) % len];
+    const len = currentCategories.length;
+    const nextCat = currentCategories[(activeIndex + 1) % len] || currentCategories[0];
+    const next2Cat = currentCategories[(activeIndex + 2) % len] || currentCategories[0];
     cab.style.setProperty('--tab', activeCategory.color);
     cab.style.setProperty('--next', nextCat.color);
     cab.style.setProperty('--next2', next2Cat.color);
-  }, [activeKey, activeIndex, activeCategory]);
+  }, [activeKey, activeIndex, activeCategory, currentCategories]);
 
   // Animated folder step
   const stepFolder = (d, targetKey) => {
@@ -141,7 +142,7 @@ export default function SelectedWorks({ lang, content, onSelectWork }) {
             aria-label="Project folders"
             onKeyDown={handleTabKeyDown}
           >
-            {CATEGORIES.map((cat, idx) => {
+            {currentCategories.map((cat, idx) => {
               const isSelected = activeKey === cat.slug;
               const count = getFilteredItems(cat.slug).length;
 
@@ -183,7 +184,7 @@ export default function SelectedWorks({ lang, content, onSelectWork }) {
             </div>
 
             {/* Folder Pagination Controls */}
-            {CATEGORIES.length > 1 && (
+            {currentCategories.length > 1 && (
               <div className="fpager" style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
                 <button
                   type="button"
@@ -196,7 +197,7 @@ export default function SelectedWorks({ lang, content, onSelectWork }) {
                   </svg>
                 </button>
                 <div className="fdots">
-                  {CATEGORIES.map((cat) => (
+                  {currentCategories.map((cat) => (
                     <i
                       key={cat.slug}
                       style={{ '--c': cat.color }}

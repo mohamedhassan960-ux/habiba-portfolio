@@ -30,6 +30,28 @@ function deepMerge(target, source) {
   return output;
 }
 
+function mergeWorks(defaultWorks, savedWorks) {
+  if (!savedWorks) return defaultWorks;
+  const mergedItems = [...(defaultWorks?.items || [])];
+
+  if (Array.isArray(savedWorks.items)) {
+    savedWorks.items.forEach((savedItem) => {
+      const idx = mergedItems.findIndex((it) => it.id === savedItem.id);
+      if (idx !== -1) {
+        mergedItems[idx] = { ...mergedItems[idx], ...savedItem };
+      } else {
+        mergedItems.push(savedItem);
+      }
+    });
+  }
+
+  return {
+    ...defaultWorks,
+    ...savedWorks,
+    items: mergedItems
+  };
+}
+
 export function PortfolioDataProvider({ children }) {
   // 1. Data state with localStorage persistence
   const [data, setData] = useState(() => {
@@ -37,12 +59,23 @@ export function PortfolioDataProvider({ children }) {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
+        const arContent = deepMerge(DEFAULT_PORTFOLIO_CONTENT.ar, parsed.content?.ar);
+        const enContent = deepMerge(DEFAULT_PORTFOLIO_CONTENT.en, parsed.content?.en);
+
+        arContent.works = mergeWorks(DEFAULT_PORTFOLIO_CONTENT.ar.works, parsed.content?.ar?.works);
+        enContent.works = mergeWorks(DEFAULT_PORTFOLIO_CONTENT.en.works, parsed.content?.en?.works);
+
+        const categories =
+          parsed.categories && parsed.categories.length >= DEFAULT_CATEGORIES.length
+            ? parsed.categories
+            : DEFAULT_CATEGORIES;
+
         return {
           content: {
-            ar: deepMerge(DEFAULT_PORTFOLIO_CONTENT.ar, parsed.content?.ar),
-            en: deepMerge(DEFAULT_PORTFOLIO_CONTENT.en, parsed.content?.en)
+            ar: arContent,
+            en: enContent
           },
-          categories: parsed.categories || DEFAULT_CATEGORIES,
+          categories,
           socials: parsed.socials || DEFAULT_SOCIAL_LINKS,
           whatsapp: parsed.whatsapp || DEFAULT_WHATSAPP_CONFIG
         };

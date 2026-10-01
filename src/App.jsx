@@ -15,6 +15,7 @@ import { PortfolioDataProvider, usePortfolioData } from './context/PortfolioData
 import AdminTopToolbar from './components/admin/AdminTopToolbar';
 import RetroAdminModal from './components/admin/RetroAdminModal';
 import ProjectEditorModal from './components/admin/ProjectEditorModal';
+import CategoryEditorModal from './components/admin/CategoryEditorModal';
 import './styles/admin.css';
 
 function AppContent() {
@@ -141,6 +142,7 @@ function AppContent() {
       {/* Visual CMS Modals */}
       <RetroAdminModal />
       <ProjectEditorModal />
+      <CategoryEditorModal />
     </div>
   );
 }

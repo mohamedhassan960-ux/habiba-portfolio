@@ -147,6 +147,11 @@ export function PortfolioDataProvider({ children }) {
     isNew: false
   });
 
+  const [categoryModal, setCategoryModal] = useState({
+    isOpen: false,
+    category: null
+  });
+
   // 4. Data Mutators
   const updateBilingualField = (path, valueAr, valueEn) => {
     const nextContent = JSON.parse(JSON.stringify(data.content));
@@ -282,6 +287,70 @@ export function PortfolioDataProvider({ children }) {
     });
   };
 
+  const updateCategory = (slug, updates) => {
+    const nextCategories = (data.categories || DEFAULT_CATEGORIES).map((cat) => {
+      if (cat.slug === slug) {
+        return {
+          ...cat,
+          name: {
+            ar: updates.nameAr !== undefined ? updates.nameAr : cat.name.ar,
+            en: updates.nameEn !== undefined ? updates.nameEn : cat.name.en
+          },
+          desc: {
+            ar: updates.descAr !== undefined ? updates.descAr : cat.desc?.ar,
+            en: updates.descEn !== undefined ? updates.descEn : cat.desc?.en
+          },
+          color: updates.color || cat.color
+        };
+      }
+      return cat;
+    });
+
+    persistData({
+      ...data,
+      categories: nextCategories
+    });
+  };
+
+  const moveProjectCategory = (projectId, targetCategorySlug) => {
+    if (!projectId || !targetCategorySlug || targetCategorySlug === 'all') return;
+
+    const targetCategory = (data.categories || DEFAULT_CATEGORIES).find(
+      (c) => c.slug === targetCategorySlug
+    );
+    if (!targetCategory) return;
+
+    const nextContent = JSON.parse(JSON.stringify(data.content));
+    const itemsAr = [...(nextContent.ar.works?.items || [])];
+    const itemsEn = [...(nextContent.en.works?.items || [])];
+
+    const idxAr = itemsAr.findIndex((p) => p.id === projectId);
+    if (idxAr !== -1) {
+      itemsAr[idxAr] = {
+        ...itemsAr[idxAr],
+        categorySlug: targetCategorySlug,
+        category: targetCategory.name.ar
+      };
+    }
+
+    const idxEn = itemsEn.findIndex((p) => p.id === projectId);
+    if (idxEn !== -1) {
+      itemsEn[idxEn] = {
+        ...itemsEn[idxEn],
+        categorySlug: targetCategorySlug,
+        category: targetCategory.name.en
+      };
+    }
+
+    nextContent.ar.works.items = itemsAr;
+    nextContent.en.works.items = itemsEn;
+
+    persistData({
+      ...data,
+      content: nextContent
+    });
+  };
+
   // 5. Code Export: generates clean portfolioData.js code file
   const exportDataFile = () => {
     const code = `// ==========================================================================
@@ -355,6 +424,10 @@ export const PORTFOLIO_CONTENT = ${JSON.stringify(data.content, null, 2)};
         setFieldModal,
         projectModal,
         setProjectModal,
+        categoryModal,
+        setCategoryModal,
+        updateCategory,
+        moveProjectCategory,
         updateBilingualField,
         updateSingleField,
         saveProject,

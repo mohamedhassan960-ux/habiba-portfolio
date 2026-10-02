@@ -340,6 +340,11 @@ button, input, textarea {
   border-radius: 50%;
   background: transparent;
   animation: twinkle 3.5s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+
+.sky.is-night .stars i {
+  animation-play-state: running;
 }
 
 .stars i:nth-child(2) {
@@ -388,6 +393,11 @@ button, input, textarea {
   fill: #fff;
   animation: tw 4s ease-in-out infinite;
   animation-delay: var(--dl);
+  animation-play-state: paused;
+}
+
+.sky.is-night .tw {
+  animation-play-state: running;
 }
 
 @keyframes tw {
@@ -453,6 +463,11 @@ button, input, textarea {
   filter: drop-shadow(0 0 12px rgb(255 240 210 / .35));
   transition: transform .6s var(--spring), filter .6s;
   animation: moonfloat 40s ease-in-out infinite, librate 16s ease-in-out infinite;
+  animation-play-state: paused;
+}
+
+.moon-sky.is-night canvas {
+  animation-play-state: running;
 }
 
 .moon-sky.hover canvas {

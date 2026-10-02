@@ -317,7 +317,28 @@ export default function Hero({ lang, content }) {
       }, 1900));
     };
 
+    let isHeroVisible = true;
+    const heroSection = wordRef.current?.closest('.hero') || wordRef.current;
+    const heroObserver = new IntersectionObserver(
+      (entries) => {
+        const nextVisible = entries[0].isIntersecting;
+        if (nextVisible !== isHeroVisible) {
+          isHeroVisible = nextVisible;
+          if (isHeroVisible && !animId) {
+            animId = requestAnimationFrame(loop);
+          }
+        }
+      },
+      { rootMargin: '200px 0px' }
+    );
+    if (heroSection) heroObserver.observe(heroSection);
+
     const loop = (t) => {
+      if (!isHeroVisible) {
+        animId = null;
+        return;
+      }
+
       const idle = mx === null || (performance.now() - lastMove > 3500);
       if (idle !== love) setLove(idle);
 
@@ -402,6 +423,7 @@ export default function Hero({ lang, content }) {
     animId = requestAnimationFrame(loop);
 
     return () => {
+      heroObserver.disconnect();
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('touchmove', onTouchMove);
       blinkTimers.forEach(clearTimeout);
@@ -480,6 +502,7 @@ export default function Hero({ lang, content }) {
                   alt="Habiba Yasser"
                   width="820"
                   height="982"
+                  decoding="async"
                   draggable="false"
                 />
               </span>

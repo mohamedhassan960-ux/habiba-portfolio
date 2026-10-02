@@ -250,6 +250,7 @@ export default function SelectedWorks({ lang, content, onSelectWork }) {
                           width={808}
                           height={632}
                           loading="lazy"
+                          decoding="async"
                         />
                         <span className="be" aria-hidden="true">
                           {isRTL ? 'معاينة' : 'Zoom'}

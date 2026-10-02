@@ -295,7 +295,7 @@ export default function SkyAtmosphere({ lang }) {
     window.addEventListener('resize', placeMoon);
 
     // 3. Scroll-driven diurnal sky phases (Dawn -> Day -> Sunset -> Night)
-    let edgeKey = '';
+      let edgeKey = '';
     const skyEl = document.querySelector('.sky');
     const layers = {
       b: document.querySelector('.sky-b'),
@@ -303,8 +303,17 @@ export default function SkyAtmosphere({ lang }) {
       d: document.querySelector('.sky-d')
     };
 
+    let cachedMaxScroll = 1;
+    const updateMaxScroll = () => {
+      cachedMaxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    };
+    updateMaxScroll();
+
     const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
     const mixC = (p, q, k) => p.map((v, i) => v + (q[i] - v) * k);
+
+    let lastN = -1;
+    let lastP = -1;
 
     const onScroll = () => {
       const y = window.scrollY;
@@ -344,13 +353,29 @@ export default function SkyAtmosphere({ lang }) {
         document.body.style.backgroundColor = rgbStr;
       }
 
-      document.documentElement.style.setProperty('--night', n.toFixed(3));
+      // High-performance local scoping: update variables ONLY on elements that actually consume them
+      // Never set on document.documentElement to prevent cascading full-DOM style invalidation
+      if (Math.abs(n - lastN) > 0.001) {
+        lastN = n;
+        const nStr = n.toFixed(3);
+        const isNight = n > 0.05;
+        if (skyEl) {
+          skyEl.style.setProperty('--night', nStr);
+          skyEl.classList.toggle('is-night', isNight);
+        }
+        if (moonSkyRef.current) {
+          moonSkyRef.current.style.setProperty('--night', nStr);
+          moonSkyRef.current.classList.toggle('is-night', isNight);
+        }
+        if (secContact) secContact.style.setProperty('--night', nStr);
+      }
       nightValRef.current = n;
 
-      document.documentElement.style.setProperty(
-        '--p',
-        (y / Math.max(1, document.documentElement.scrollHeight - vh)).toFixed(3)
-      );
+      const pVal = y / cachedMaxScroll;
+      if (Math.abs(pVal - lastP) > 0.001) {
+        lastP = pVal;
+        if (skyEl) skyEl.style.setProperty('--p', pVal.toFixed(3));
+      }
 
       // Tuck navbar away when entering starry night mode (n > 0.55)
       const nav = document.getElementById('nav');
@@ -374,7 +399,10 @@ export default function SkyAtmosphere({ lang }) {
     };
 
     window.addEventListener('scroll', scrollListener, { passive: true });
-    const resizeObs = new ResizeObserver(onScroll);
+    const resizeObs = new ResizeObserver(() => {
+      updateMaxScroll();
+      onScroll();
+    });
     resizeObs.observe(document.body);
     onScroll();
 

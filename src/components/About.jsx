@@ -161,8 +161,23 @@ export default function About({ lang, content }) {
     }
   };
 
-  // Synchronize labels when language changes
+  const timeoutsRef = useRef([]);
+
+  const clearAllTimeouts = () => {
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+  };
+
   useEffect(() => {
+    return () => clearAllTimeouts();
+  }, []);
+
+  // Synchronize labels and text when language changes
+  useEffect(() => {
+    const fullQuestion = isRTL
+      ? 'شغلك رائع جداً! نقدر نبدأ امتى؟'
+      : 'Love it all. When can we start?';
+
     if (!chatStarted) {
       setWhoClient(isRTL ? 'عميلك القادم يكتب الآن…' : 'Your brand is typing…');
     } else {
@@ -173,9 +188,14 @@ export default function About({ lang, content }) {
         setWhoDesigner(isRTL ? 'حبيبة' : 'Habiba');
       }
     }
-  }, [isRTL, chatStarted, designerPhase]);
 
-  // Live Chat Typewriter on Intersection with exact reference timeline (1600ms wait -> typing -> 1700ms wait -> jelly)
+    if (clientPhase === 'done') {
+      setClientText(fullQuestion);
+    }
+  }, [isRTL, chatStarted, designerPhase, clientPhase]);
+
+  // Live Chat Typewriter on Intersection: triggers when user scrolls down to chat
+  // Types out word-by-word with tuned timeline (snappy dots -> fast readable words -> quick Habiba response)
   useEffect(() => {
     const triggerEl = typingClientRef.current;
     if (!triggerEl) return;
@@ -190,42 +210,60 @@ export default function About({ lang, content }) {
           observer.disconnect();
           setChatStarted(true);
 
-          // Phase 1: 1600ms of "Your brand is typing..." with bouncing dots
-          setTimeout(() => {
+          // Phase 1: Snappy 450ms of bouncing dots so visitor sees "typing" without annoying delay
+          const t1 = setTimeout(() => {
             setWhoClient(isRTL ? 'عميلك' : 'Your brand');
             setClientPhase('typing');
 
-            // Phase 2: Letter-by-letter typewriter with natural random delay 28ms-55ms
-            let i = 0;
-            const typeStep = () => {
-              i++;
-              setClientText(fullQuestion.slice(0, i));
-              if (i < fullQuestion.length) {
-                const delay = Math.floor(Math.random() * (55 - 28 + 1)) + 28;
-                setTimeout(typeStep, delay);
+            // Phase 2: Word-by-word typing ("كلمة كلمة زي ما في المصدر")
+            const words = fullQuestion.split(' ');
+            let wordIndex = 0;
+
+            const typeWordStep = () => {
+              wordIndex++;
+              setClientText(words.slice(0, wordIndex).join(' '));
+
+              if (wordIndex < words.length) {
+                // Natural brisk pacing between 170ms and 210ms per word (readable & fast)
+                const delay = Math.floor(Math.random() * (210 - 170 + 1)) + 170;
+                const nextT = setTimeout(typeWordStep, delay);
+                timeoutsRef.current.push(nextT);
               } else {
                 setClientPhase('done');
 
-                // Phase 3: Immediately Habiba is typing for 1700ms with bouncing dots
-                setDesignerPhase('dots');
-                setWhoDesigner(isRTL ? 'حبيبة تكتب الآن…' : 'Habiba is typing…');
+                // Natural brief 250ms breathing room before Habiba starts typing
+                const t2 = setTimeout(() => {
+                  setDesignerPhase('dots');
+                  setWhoDesigner(isRTL ? 'حبيبة تكتب الآن…' : 'Habiba is typing…');
 
-                setTimeout(() => {
-                  setWhoDesigner(isRTL ? 'حبيبة' : 'Habiba');
-                  setDesignerPhase('answered');
-                }, 1700);
+                  // Phase 3: Habiba typing indicator for 800ms
+                  const t3 = setTimeout(() => {
+                    setWhoDesigner(isRTL ? 'حبيبة' : 'Habiba');
+                    setDesignerPhase('answered');
+                  }, 800);
+                  timeoutsRef.current.push(t3);
+                }, 250);
+                timeoutsRef.current.push(t2);
               }
             };
 
-            typeStep();
-          }, 1600);
+            typeWordStep();
+          }, 450);
+          timeoutsRef.current.push(t1);
         }
       },
-      { threshold: 0.6 }
+      {
+        // Require element to be at least 15% inside the viewport so it never triggers prematurely
+        // while the user is still reading bio or top of section
+        rootMargin: '0px 0px -15% 0px',
+        threshold: 0.6
+      }
     );
 
     observer.observe(triggerEl);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+    };
   }, [chatStarted, isRTL]);
 
   // When designerPhase switches to 'answered', trigger jelly bounce
@@ -279,6 +317,7 @@ export default function About({ lang, content }) {
                 width={900}
                 height={1150}
                 loading="lazy"
+                decoding="async"
                 draggable={false}
               />
             </figure>
@@ -300,6 +339,8 @@ export default function About({ lang, content }) {
                     alt="Habiba Cartoon Standin"
                     width={774}
                     height={942}
+                    loading="lazy"
+                    decoding="async"
                     draggable={false}
                     className="drop-shadow-lg"
                   />
@@ -712,7 +753,8 @@ export default function About({ lang, content }) {
                   src="/assets/Habiba-Yasser-CV.png"
                   alt="Habiba Yasser CV — السيرة الذاتية حبيبة ياسر"
                   className="w-full h-auto block"
-                  loading="eager"
+                  loading="lazy"
+                  decoding="async"
                 />
               )}
             </div>
